@@ -2,19 +2,27 @@
 
 FROM python:3.10-alpine3.15
 
-LABEL MAINTAINER "Prashant Shahi <me@prashantshahi.dev>"
+LABEL maintainer="Tahreer-Alshaikh <tahreerbassam2014@gmail.com>"
 
-RUN pip install --upgrade pip
+# Install build dependencies for Python packages
+RUN apk add --no-cache gcc musl-dev linux-headers
 
+# Create app user
 RUN adduser -D appuser
 USER appuser
 WORKDIR /home/appuser
 
 ENV PATH="/home/appuser/.local/bin:${PATH}"
+ENV FLASK_APP=app.py
 
-COPY --chown=appuser:appuser requirements.txt requirements.txt
-RUN pip install --user -r requirements.txt
+# Copy requirements and install
+COPY --chown=appuser:appuser requirements.txt .
+RUN pip install --user --upgrade pip && \
+    pip install --user -r requirements.txt
 
+# Copy project files
 COPY --chown=appuser:appuser . .
 
-CMD ["python", "-m", "flask", "run", "--host=0.0.0.0"]
+# Run flask
+CMD ["flask", "run", "--host=0.0.0.0"]
+
