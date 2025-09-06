@@ -1,4 +1,3 @@
-
 name: CI/CD Pipeline
 
 on:
@@ -20,7 +19,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: tahreer
-          password: 0790310741
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push Docker image
         uses: docker/build-push-action@v4
